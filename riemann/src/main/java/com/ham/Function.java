@@ -6,9 +6,9 @@ import javax.script.ScriptException;
 
 // https://www.geeksforgeeks.org/java/how-to-evaluate-math-expression-given-in-string-form-in-java/
 public class Function {
-    String expression;
-    ScriptEngineManager manager; 
-    ScriptEngine engine;
+    private String expression;
+    private ScriptEngineManager manager; 
+    private ScriptEngine engine;
 
     // Constructor
     // y = USER INPUT
@@ -28,7 +28,11 @@ public class Function {
     public double getY(double x)
     {
         try {
-            return (double) engine.eval(this.replaceX(x));
+            Object result = engine.eval(this.replaceX(x));
+            if (result instanceof Number) {
+                return ((Number) result).doubleValue();
+            }
+            return Double.NaN;
         } catch (ScriptException e) {
             e.printStackTrace();
             return Double.NaN;

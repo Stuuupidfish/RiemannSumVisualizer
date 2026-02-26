@@ -11,15 +11,18 @@ public class Main {
     private static final int HEIGHT = 600;
     private static final int X_OFFSET = 800/2;
     private static final int Y_OFFSET = 600/2;
-    private static final double SCALE = 25.0;  // pixels per unit
+    private static double SCALE = 25.0;  // pixels per unit
     public static void main (String args[])
     {  
-
         CodeDraw cd = new CodeDraw(WIDTH, HEIGHT);
-        Function f = new Function("x^3");
+        UIHandler UI = new UIHandler(cd);
+        cd.setTitle("Riemann Sum Visualizer");
+        String expression = "3x^2-1";
+        Function f = new Function(expression);
         
         drawGrid(cd);
         drawFunction(f, cd);
+        UI.drawEquation("0", "10", "5", expression);
         //drawRS("right", 0, 8, 8, f, cd);
         
         cd.show();
