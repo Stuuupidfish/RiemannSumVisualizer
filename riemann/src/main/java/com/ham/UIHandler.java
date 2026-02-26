@@ -55,7 +55,7 @@ public class UIHandler {
         {
             if (expression != null && expression.length() > 0)
             {
-                cd.drawText(135+20+20*expression.length(), 80, "((" + b + "-" + a + ")/" + n + ")");
+                cd.drawText(135+15+20*expression.length(), 80, "((" + b + "-" + a + ")/" + n + ")");
             }
             else
             {

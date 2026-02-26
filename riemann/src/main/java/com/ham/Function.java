@@ -56,25 +56,25 @@ public class Function {
     private String processExpression(String expression)
     {
         //this is a vibe coded support for string parsing
-            // Add implicit multiplication: 2x becomes 2*x
-            expression = expression.replaceAll("(\\d)([a-zA-Z])", "$1*$2");
-            // Add implicit multiplication: )x becomes )*x
-            expression = expression.replaceAll("(\\))([a-zA-Z])", "$1*$2");
-            // Add implicit multiplication: x( becomes x*(
-            expression = expression.replaceAll("([a-zA-Z])(\\()", "$1*$2");
-        
-            // Convert mathematical notation to JavaScript:
-            // x^2 becomes Math.pow(x, 2) (Nashorn doesn't support ** operator)
-            expression = expression.replaceAll("([a-zA-Z0-9)]+)\\^([a-zA-Z0-9(]+)", "Math.pow($1,$2)");
-            
-            // Add Math. prefix to trig and math functions
+            // Add Math. prefix to trig and math functions FIRST
             expression = expression.replaceAll("\\bsin\\(", "Math.sin(");
             expression = expression.replaceAll("\\bcos\\(", "Math.cos(");
             expression = expression.replaceAll("\\btan\\(", "Math.tan(");
             expression = expression.replaceAll("\\bsqrt\\(", "Math.sqrt(");
             expression = expression.replaceAll("\\babs\\(", "Math.abs(");
         
-            System.out.println("Converted to: " + expression);
+            // Add implicit multiplication: 2x becomes 2*x
+            expression = expression.replaceAll("(\\d)([a-zA-Z])", "$1*$2");
+            // Add implicit multiplication: )x becomes )*x
+            expression = expression.replaceAll("(\\))([a-zA-Z])", "$1*$2");
+            // Add implicit multiplication: x( becomes x*( (only single letters to avoid breaking function names)
+            expression = expression.replaceAll("\\b([a-zA-Z])\\(", "$1*(");
+        
+            // Convert mathematical notation to JavaScript:
+            // x^2 becomes Math.pow(x, 2) (Nashorn doesn't support ** operator)
+            expression = expression.replaceAll("([a-zA-Z0-9)]+)\\^([a-zA-Z0-9(]+)", "Math.pow($1,$2)");
+        
+            //System.out.println("Converted to: " + expression);
         
         return expression;
     }

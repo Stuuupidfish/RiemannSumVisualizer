@@ -17,7 +17,7 @@ public class Main {
         CodeDraw cd = new CodeDraw(WIDTH, HEIGHT);
         UIHandler UI = new UIHandler(cd);
         cd.setTitle("Riemann Sum Visualizer");
-        String expression = "3x^2-1";
+        String expression = "3x*cos(3x)";
         Function f = new Function(expression);
         
         drawGrid(cd);
