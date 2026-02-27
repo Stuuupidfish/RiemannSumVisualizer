@@ -20,61 +20,63 @@ public class UIHandler {
          a
         */
         tf.setFontSize(100);
-        cd.drawText(60, 50, "Σ");
+        cd.drawText(60, 40, "Σ");
 
         tf.setFontSize(20);
         if (b != null && b.length() > 0)
         {
-            cd.drawText(90, 35, b);
+            cd.drawText(90, 25, b);
         }
         else
         {
-            cd.drawText(90, 35, "b");
+            cd.drawText(90, 25, "b");
         }
         
         if (a != null && a.length() > 0)
         {
-            cd.drawText(90, 135, a);
+            cd.drawText(90, 125, a);
         }
         else
         {
-            cd.drawText(90, 135, "a");
+            cd.drawText(90, 125, "a");
         }
         tf.setFontSize(32);
 
+        String str = "";
         if (expression != null && expression.length() > 0)
         {
-            cd.drawText(135, 80, "(" + expression + ") ");
+            str = "(" + expression + ") ";
         }
         else
         {
-            cd.drawText(135, 80, "f(x) ");
+            str = "f(x) ";
         }
 
         if (b != null && b.length() > 0 && a != null && a.length() > 0 && n != null && n.length() > 0)
         {
             if (expression != null && expression.length() > 0)
             {
-                cd.drawText(135+15+20*expression.length(), 80, "((" + b + "-" + a + ")/" + n + ")");
+                str += "((" + b + "-" + a + ")/" + n + ")";
             }
             else
             {
-                cd.drawText(165, 80, "Δx");
+                str += "Δx";
             }
         }
         else
         {
-            cd.drawText(165, 80, "Δx");
+            str += "Δx";
         }
+        cd.drawText(135, 70, str);
 
         tf.setFontSize(20);
-        cd.drawText(60, 170, "n = ");
+        cd.drawText(60, 160, "n = ");
         
-        cd.drawText(60, 200, "a = ");
+        cd.drawText(60, 190, "a = ");
 
-        cd.drawText(60, 230, "b = ");
+        cd.drawText(60, 220, "b = ");
 
-        cd.drawText(42, 260, "f(x) = ");
+        cd.drawText(42, 250, "f(x) = ");
     }
 
 }
