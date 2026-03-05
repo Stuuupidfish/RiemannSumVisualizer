@@ -1,5 +1,4 @@
 package com.ham;
-import org.w3c.dom.events.MouseEvent;
 
 // https://krassnig.github.io/CodeDrawJavaDoc/v5.0.x/codedraw/package-summary.html
 // https://krassnig.github.io/CodeDrawJavaDoc/v5.0.x/codedraw/Image.html#drawLine(double,double,double,double)
@@ -8,7 +7,8 @@ import codedraw.EventScanner;
 import codedraw.MouseClickEvent;
 import codedraw.MouseMoveEvent;
 import codedraw.Palette;
-// run on POWERSHELL:
+// https://krassnig.github.io/CodeDrawJavaDoc/v5.0.x/codedraw/Palette.html
+
 // (cd to riemann)
 // mvn compile exec:java "-Dexec.mainClass=com.ham.Main"
 public class Main {
@@ -24,14 +24,19 @@ public class Main {
         UIHandler UI = new UIHandler(cd);
 
         cd.setTitle("Riemann Sum Visualizer");
-        String expression = "sin(20x)*sin(x)";
+
+        String expression = "2*cos(0.5x)";//"sin(20x)*sin(x)";
         Function f = new Function(expression);
+        double a;
+        double b;
+        int n;
+
         cd.show();
 
-        InputField n = new InputField(95, 160, 100, 25, cd);
-        InputField a = new InputField(95, 190, 100, 25, cd);
-        InputField b = new InputField(95, 220, 100, 25, cd);
-        InputField y = new InputField(95, 250, 150, 25, cd);
+        InputField nInput = new InputField(95, 160, 100, 25, cd);
+        InputField aInput = new InputField(95, 190, 100, 25, cd);
+        InputField bInput = new InputField(95, 220, 100, 25, cd);
+        InputField yInput = new InputField(95, 250, 150, 25, cd);
 
         while (!cd.isClosed())
         {
@@ -42,18 +47,24 @@ public class Main {
                 double mouseX = mouse.getX();
                 double mouseY = mouse.getY();
             }
+
             drawGrid(cd);
-            drawFunction(f, cd);
-            UI.drawEquation("0", "10", "5", expression);
-            //drawRS("right", 0, 8, 8, f, cd);
+            drawAll(cd, expression, 0, 10, 15, f, UI, "mid");
             
-            n.drawBox();
-            a.drawBox();
-            b.drawBox();
-            y.drawBox();
+            nInput.drawBox();
+            aInput.drawBox();
+            bInput.drawBox();
+            yInput.drawBox();
             
             cd.show();
         }
+    }
+
+    public static void drawAll(CodeDraw cd, String expression, double a, double b, int n, Function f, UIHandler UI, String approxType)
+    {
+        UI.drawEquation(a + "", b + "'", n + "", expression);
+        drawRS(approxType, a, b, n, f, cd);
+        drawFunction(f, cd);
     }
 
     public static void drawGrid(CodeDraw cd)
@@ -108,28 +119,74 @@ public class Main {
     }
 
     //fillRectangle(double x, double y, double width, double height)
+    //drawRectangle(double x, double y, double width, double height)
     public static void drawRS(String approxType, double a, double b, int n, Function f, CodeDraw cd)
     {
-        cd.setColor(Palette.ALICE_BLUE);
+        double dx = (b-a)/n;
         if (approxType.equals("right"))
         {
-            for (int i = 0; i < n; i++)
+            for (int i = 1; i <= n; i++)
             {
-                //cd.fillRectangle(1,1 ,1 ,1 );
+                double x = a + i * dx;
+                double y = f.getY(x);
+
+                // Convert to screen coordinates
+                double xScreen = x * SCALE + X_OFFSET;  // left edge
+                double heightScreen = Math.abs(y * SCALE);  // absolute height
+                double yScreen;  // top position
+                if (y >= 0) {
+                    yScreen = -y * SCALE + Y_OFFSET;  // top of rect is at y, draws down to x-axis
+                } else {
+                    yScreen = Y_OFFSET;               // top of rect is x-axis, draws down to y
+                }
+                cd.setColor(Palette.AQUA);
+                cd.fillRectangle(xScreen - (dx * SCALE), yScreen, dx * SCALE, heightScreen);
+                cd.setColor(Palette.GREEN);
+                cd.drawRectangle(xScreen - (dx * SCALE), yScreen, dx * SCALE, heightScreen);
             }
         }
         else if (approxType.equals("left"))
         {
             for (int i = 0; i < n; i++)
             {
-                //cd.fillRectangle(1,1 ,1 ,1 );
+                double x = a + i * dx;
+                double y = f.getY(x);
+
+                double xScreen = x * SCALE + X_OFFSET;  
+                double heightScreen = Math.abs(y * SCALE); 
+                double yScreen;
+                if (y >= 0) {
+                    yScreen = -y * SCALE + Y_OFFSET;  // top of rect is at y, draws down to x-axis
+                } else {
+                    yScreen = Y_OFFSET;               // top of rect is x-axis, draws down to y
+                }
+                
+                cd.setColor(Palette.AQUA);
+                cd.fillRectangle(xScreen, yScreen, dx * SCALE, heightScreen);
+                cd.setColor(Palette.GREEN);
+                cd.drawRectangle(xScreen, yScreen, dx * SCALE, heightScreen);
             }
         }
         else if (approxType.equals("mid"))
         {
             for (int i = 0; i < n; i++)
             {
-                //cd.fillRectangle(1,1 ,1 ,1 );
+                double x = a + (i + 0.5) * dx;
+                double y = f.getY(x);
+
+                double xScreen = x * SCALE + X_OFFSET;  
+                double heightScreen = Math.abs(y * SCALE); 
+                double yScreen;
+                if (y >= 0) {
+                    yScreen = -y * SCALE + Y_OFFSET;  // top of rect is at y, draws down to x-axis
+                } else {
+                    yScreen = Y_OFFSET;               // top of rect is x-axis, draws down to y
+                }
+                
+                cd.setColor(Palette.AQUA);
+                cd.fillRectangle(xScreen - (dx * SCALE/2), yScreen, dx * SCALE, heightScreen);
+                cd.setColor(Palette.GREEN);
+                cd.drawRectangle(xScreen - (dx * SCALE/2), yScreen, dx * SCALE, heightScreen);
             }
         }
     }

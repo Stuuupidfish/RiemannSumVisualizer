@@ -1,6 +1,7 @@
 package com.ham;
 import codedraw.CodeDraw;
 import codedraw.TextFormat;
+import codedraw.Palette;
 
 public class UIHandler {
     private CodeDraw cd;
@@ -19,6 +20,7 @@ public class UIHandler {
          Σ  f(x)Δx
          a
         */
+        cd.setColor(Palette.GREEN);
         tf.setFontSize(100);
         cd.drawText(60, 40, "Σ");
 
