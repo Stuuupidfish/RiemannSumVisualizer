@@ -25,7 +25,7 @@ public class Main {
 
         cd.setTitle("Riemann Sum Visualizer");
 
-        String expression = "2*cos(0.5x)";//"sin(20x)*sin(x)";
+        String expression = "sin(x)";//"sin(20x)*sin(x)";
         Function f = new Function(expression);
         double a;
         double b;
@@ -38,18 +38,100 @@ public class Main {
         InputField bInput = new InputField(95, 220, 100, 25, cd);
         InputField yInput = new InputField(95, 250, 150, 25, cd);
 
+        boolean caretActive = false;
+        InputField activeInput = null;
+
         while (!cd.isClosed())
         {
-            if (scanner.hasMouseClickEvent())
+            while (scanner.hasEventNow()) 
             {
-                // https://krassnig.github.io/CodeDrawJavaDoc/v5.0.x/codedraw/EventScanner.html#hasMouseDownEvent()
-                MouseClickEvent mouse = scanner.nextMouseClickEvent();
-                double mouseX = mouse.getX();
-                double mouseY = mouse.getY();
+                if (scanner.hasMouseClickEvent())
+                {
+                    System.out.println("mouse clicked");
+                    
+                    // https://krassnig.github.io/CodeDrawJavaDoc/v5.0.x/codedraw/EventScanner.html#hasMouseDownEvent()
+                    MouseClickEvent mouse = scanner.nextMouseClickEvent();
+
+                    double mouseX = mouse.getX();
+                    double mouseY = mouse.getY();
+                    
+                    double caretX;
+                    double caretY;
+                    if (nInput.contains(mouseX, mouseY))
+                    {
+                        caretActive = true;
+                        nInput.setActive(true);
+                        caretX = nInput.getCoord()[0];
+                        caretY = nInput.getCoord()[1];
+
+                        aInput.setActive(false);
+                        bInput.setActive(false);
+                        yInput.setActive(false);
+                    }
+                    else if (aInput.contains(mouseX, mouseY))
+                    {
+                        caretActive = true;
+                        aInput.setActive(true);
+                        caretX = aInput.getCoord()[0];
+                        caretY = aInput.getCoord()[1];
+
+                        nInput.setActive(false);
+                        bInput.setActive(false);
+                        yInput.setActive(false);
+                    }
+                    else if (bInput.contains(mouseX, mouseY))
+                    {
+                        caretActive = true;
+                        bInput.setActive(true);
+                        caretX = bInput.getCoord()[0];
+                        caretY = bInput.getCoord()[1];
+
+                        aInput.setActive(false);
+                        nInput.setActive(false);
+                        yInput.setActive(false);
+                    }
+                    else if (yInput.contains(mouseX, mouseY))
+                    {
+                        caretActive = true;
+                        yInput.setActive(true);
+                        caretX = yInput.getCoord()[0];
+                        caretY = yInput.getCoord()[1];
+                        
+                        aInput.setActive(false);
+                        nInput.setActive(false);
+                        bInput.setActive(false);
+                        
+                    }
+                    else
+                    {
+                        caretActive = false;
+                        aInput.setActive(false);
+                        nInput.setActive(false);
+                        bInput.setActive(false);
+                        yInput.setActive(false);
+                    }
+                }
+                else 
+                {
+                    scanner.nextEvent();
+                }
+
+                //KEY INPUTS-- NOT DONE PART 
+                //if any one button is selected, listen for keyboard input
+                //pass in input string 
+                if (caretActive) //will need this: public boolean hasKeyDownEvent()
+                {
+                    String inputStr = "";
+                    //cd.fillRectangle(n, a, b, n);
+                    // https://krassnig.github.io/CodeDrawJavaDoc/v5.0.x/codedraw/Key.html
+                    // Key key = scanner.hasKeyDownEvent().getKey();
+                    // inputStr += key;
+                }
             }
 
             drawGrid(cd);
-            drawAll(cd, expression, 0, 10, 15, f, UI, "mid");
+            //drawAll(CodeDraw cd, String expression, double a, double b, int n, Function f, UIHandler UI, String approxType)
+            drawAll(cd, expression, 0, 10, 100, f, UI, "left");
             
             nInput.drawBox();
             aInput.drawBox();
@@ -62,7 +144,7 @@ public class Main {
 
     public static void drawAll(CodeDraw cd, String expression, double a, double b, int n, Function f, UIHandler UI, String approxType)
     {
-        UI.drawEquation(a + "", b + "'", n + "", expression);
+        UI.drawEquation(a + "", b + "", n + "", expression);
         drawRS(approxType, a, b, n, f, cd);
         drawFunction(f, cd);
     }

@@ -32,6 +32,22 @@ public class InputField
         return isActive;
     }
 
+    public double[] getCoord()
+    {
+        return coord;
+    }
+
+    //on enter call
+    public void setValue(String str)
+    {
+        value = str;
+    }
+    public String getValue()
+    {
+        return value;
+    }
+
+
     void drawBox()
     {
         cd.setColor(Palette.LIGHT_GRAY);
