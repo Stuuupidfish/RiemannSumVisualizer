@@ -1,3 +1,3 @@
-I'm using this project to learn how to implement graphics libraries in Java since I prefer working with strict OOP languages and want to pivot to more Java written projects
+visualizes user-specified Riemann sums using [CodeDraw](https://github.com/Krassnig/CodeDraw)
 
-currently a WIP-- only plots hardcoded functions rn
+CURRENTLY A WIP-- I need to still implement user input; right now it only plots and visualizes hardcoded stuff
