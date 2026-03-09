@@ -1,4 +1,5 @@
 package com.ham;
+import java.awt.Font;
 import codedraw.CodeDraw;
 import codedraw.TextFormat;
 import codedraw.Palette;
@@ -15,6 +16,8 @@ public class UIHandler {
 
     public void drawEquation(String a, String b, String n, String expression)
     {
+        tf.setFontName(Font.MONOSPACED);
+        tf.setBold(true);
         /*  
          b
          Σ  f(x)Δx
@@ -27,27 +30,27 @@ public class UIHandler {
         tf.setFontSize(20);
         if (b != null && b.length() > 0)
         {
-            cd.drawText(90, 25, b);
+            cd.drawText(70, 25, b);
         }
         else
         {
-            cd.drawText(90, 25, "b");
+            cd.drawText(70, 25, "b");
         }
         
         if (a != null && a.length() > 0)
         {
-            cd.drawText(90, 125, a);
+            cd.drawText(70, 125, a);
         }
         else
         {
-            cd.drawText(90, 125, "a");
+            cd.drawText(70, 125, "a");
         }
         tf.setFontSize(32);
 
         String str = "";
         if (expression != null && expression.length() > 0)
         {
-            str = "(" + expression + ") ";
+            str = "(" + expression + ")";
         }
         else
         {
@@ -72,13 +75,13 @@ public class UIHandler {
         cd.drawText(135, 70, str);
 
         tf.setFontSize(20);
-        cd.drawText(60, 160, "n = ");
+        cd.drawText(40, 160, "n = ");
         
-        cd.drawText(60, 190, "a = ");
+        cd.drawText(40, 190, "a = ");
 
-        cd.drawText(60, 220, "b = ");
+        cd.drawText(40, 220, "b = ");
 
-        cd.drawText(42, 250, "f(x) = ");
+        cd.drawText(12, 250, "f(x) = ");
     }
 
 }
