@@ -24,6 +24,7 @@ public class RuntimeState {
         this.expression = expression;
         this.approxType = approxType;
         this.function = new Function(expression);
+        
         this.caretActive = false;
         this.activeInput = null;
 
@@ -82,7 +83,7 @@ public class RuntimeState {
         return b;
     }
 
-    //we dont want to change the input fields themselves just whether they are active or not so no setters
+    //we dont want to change the input fields so no setters
     public InputField getNInput()
     {
         return nInput;
@@ -123,13 +124,84 @@ public class RuntimeState {
         return function;
     }
 
-    //NOT DONE
-
-    public void setInputActive(boolean nActive, boolean aActive, boolean bActive, boolean yActive)
+    public void setInputsActive(boolean nActive, boolean aActive, boolean bActive, boolean yActive)
     {
         nInput.setActive(nActive);
         aInput.setActive(aActive);
         bInput.setActive(bActive);
         yInput.setActive(yActive);
+    }
+
+    public void commitActiveInput(UIHandler UI)
+    {
+        if (activeInput == null)
+        {
+            return;
+        }
+        
+        if (activeInput == nInput)
+        {
+            int newN = parseInt(nInput.getValue(), n);
+            setN(newN);
+            UI.setN(newN + "");
+        }
+        else if (activeInput == aInput)
+        {
+            double newA = parseDouble(aInput.getValue(), a);
+            setA(newA);
+            UI.setA(newA + "");
+        }
+        else if (activeInput == bInput)
+        {
+            double newB = parseDouble(bInput.getValue(), b);
+            setB(newB);
+            UI.setB(newB + "");
+        }
+        else if (activeInput == yInput)
+        {
+            String newExpression = yInput.getValue();
+            setExpression(newExpression);
+            UI.setExpression(newExpression);
+        }
+
+        //auto-swaps a and b if a > b so program doesnt freeze
+        if (this.a > this.b)
+        {
+            double temp = this.a;
+            this.a = this.b;
+            this.b = temp;
+            UI.setA(this.a + "");
+            UI.setB(this.b + "");
+            aInput.setValue(this.a + "");
+            bInput.setValue(this.b + "");
+        }
+
+        setInputsActive(false, false, false, false);
+        setActiveInput(null);
+        setCaretActive(false);
+    }
+
+    //parsing helpers
+    private double parseDouble(String str, double fallback) throws NumberFormatException
+    {
+        try
+        {
+            return Double.parseDouble(str.trim());
+        }
+        catch (NumberFormatException e)
+        {
+            return fallback;
+        }
+    }
+    private int parseInt(String str, int fallback) throws NumberFormatException
+    {
+        try
+        {
+            return Integer.parseInt(str.trim());
+        }
+        catch (NumberFormatException e)
+        {
+            return fallback;
+        }
     }
 }

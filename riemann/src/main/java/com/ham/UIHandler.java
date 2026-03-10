@@ -73,11 +73,11 @@ public class UIHandler {
         
         if (a != null && a.length() > 0)
         {
-            cd.drawText(70, 125, a);
+            cd.drawText(50, 125, "a = " + a);
         }
         else
         {
-            cd.drawText(70, 125, "a");
+            cd.drawText(50, 125, "a =");
         }
         tf.setFontSize(32);
 

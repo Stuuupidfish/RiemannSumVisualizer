@@ -110,14 +110,16 @@ public class InputField
             value.append('*');
         }
 
-        //single press: -, x, /
+        //single press letters (x, sin, cos, tan, sqrt, cbrt, ...)
+        else if (Character.isLetter(keyEvent.getChar()))
+        {
+            value.append(Character.toLowerCase(keyEvent.getChar()));
+        }
+
+        //single press: -, /
         else if (key == Key.MINUS)
         {
             value.append('-');
-        }
-        else if (key == Key.X)
-        {
-            value.append('x');
         }
         else if (key == Key.SLASH)
         {
