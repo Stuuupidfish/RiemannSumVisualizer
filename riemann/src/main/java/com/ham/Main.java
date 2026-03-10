@@ -4,22 +4,13 @@ package com.ham;
 // https://krassnig.github.io/CodeDrawJavaDoc/v5.0.x/codedraw/Image.html#drawLine(double,double,double,double)
 import codedraw.CodeDraw;
 import codedraw.EventScanner;
-import codedraw.Key;
 import codedraw.KeyPressEvent;
 import codedraw.MouseClickEvent;
-import codedraw.MouseMoveEvent;
 import codedraw.Palette;
 // https://krassnig.github.io/CodeDrawJavaDoc/v5.0.x/codedraw/Palette.html
 
 // (cd to riemann)
 // mvn compile exec:java "-Dexec.mainClass=com.ham.Main"
-
-//!!!!!!!!!I STILL NEED TO BUILD BUTTONS FOR APPROXTYPE
-// maybe like a scroll type w l and r arrows: [<] ["mid"] [>]
-// button class? left button, right button, text and rectangle for the middle (just a main cd.draw?), 
-// should i make a separate approx class or make the array part of runtime state?
-// 3 element array of strings for the types, 
-// index to keep track of which one is selected
 
 public class Main {
     private static final int WIDTH = 800;
@@ -32,6 +23,8 @@ public class Main {
         CodeDraw cd = new CodeDraw(WIDTH, HEIGHT);
         EventScanner scanner = cd.getEventScanner();
         UIHandler UI = new UIHandler(cd);
+        ApproxSelector apprx = new ApproxSelector(600, 25, 30, 100, 30, cd);
+        
         cd.setTitle("Riemann Sum Visualizer");
 
         InputField nInput = new InputField(95, 160, 100, 25, cd);
@@ -57,6 +50,12 @@ public class Main {
 
                     double mouseX = mouse.getX();
                     double mouseY = mouse.getY();
+
+                    String newApproxType = apprx.handleClick(mouseX, mouseY);
+                    if (newApproxType != null)
+                    {
+                        state.setApproxType(newApproxType);
+                    }
                     
                     //commits changes when user clicks off an input field
                     InputField currentActive = state.getActiveInput();
@@ -117,7 +116,7 @@ public class Main {
             }
 
             drawGrid(cd);
-            drawAll(cd, state, UI);
+            drawAll(cd, state, UI, apprx);
 
             if (state.getCaretActive() && state.getActiveInput() != null)
             {
@@ -129,13 +128,14 @@ public class Main {
         }
     }
 
-    public static void drawAll(CodeDraw cd, RuntimeState state, UIHandler UI)
+    public static void drawAll(CodeDraw cd, RuntimeState state, UIHandler UI, ApproxSelector apprx)
     {
         //doesnt draw function if expression is empty
         if (state.getExpression() == null || state.getExpression().trim().isEmpty())
         {
             drawInputFields(state);
             UI.drawEquation();
+            apprx.draw();
             return;
         }
         if (state.getN() > 0)
@@ -145,6 +145,7 @@ public class Main {
         drawFunction(state.getFunction(), cd);
         drawInputFields(state);
         UI.drawEquation();
+        apprx.draw();
     }
 
     public static void drawInputFields(RuntimeState state)
@@ -239,6 +240,11 @@ public class Main {
                 double x = a + i * dx;
                 double y = f.getY(x);
 
+                if (Double.isNaN(y) || Double.isInfinite(y))
+                {
+                    continue;
+                }
+
                 // Convert to screen coordinates
                 double xScreen = x * SCALE + X_OFFSET;  // left edge
                 double heightScreen = Math.abs(y * SCALE);  // absolute height
@@ -261,6 +267,11 @@ public class Main {
                 double x = a + i * dx;
                 double y = f.getY(x);
 
+                if (Double.isNaN(y) || Double.isInfinite(y))
+                {
+                    continue;
+                }
+
                 double xScreen = x * SCALE + X_OFFSET;  
                 double heightScreen = Math.abs(y * SCALE); 
                 double yScreen;
@@ -282,6 +293,11 @@ public class Main {
             {
                 double x = a + (i + 0.5) * dx;
                 double y = f.getY(x);
+
+                if (Double.isNaN(y) || Double.isInfinite(y))
+                {
+                    continue;
+                }
 
                 double xScreen = x * SCALE + X_OFFSET;  
                 double heightScreen = Math.abs(y * SCALE); 

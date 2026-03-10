@@ -27,14 +27,18 @@ public class Function {
 
     public double getY(double x)
     {
+        if (engine == null)
+        {
+            return Double.NaN;
+        }
+
         try {
             Object result = engine.eval(this.replaceX(x));
             if (result instanceof Number) {
                 return ((Number) result).doubleValue();
             }
             return Double.NaN;
-        } catch (ScriptException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
             return Double.NaN;
         }
     }
@@ -50,11 +54,22 @@ public class Function {
     }
     public void setExpression(String expression)
     {
-        expression = processExpression(expression);
+        this.expression = processExpression(expression);
     }
 
     private String processExpression(String expression)
     {
+        if (expression == null)
+        {
+            return "";
+        }
+
+        expression = expression.trim();
+        if (expression.isEmpty())
+        {
+            return "";
+        }
+
         //this is a vibe coded support for string parsing
             // Add Math. prefix to trig and math functions FIRST
             expression = expression.replaceAll("\\bsin\\(", "Math.sin(");
