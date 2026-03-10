@@ -62,6 +62,8 @@ public class Function {
             expression = expression.replaceAll("\\btan\\(", "Math.tan(");
             expression = expression.replaceAll("\\bsqrt\\(", "Math.sqrt(");
             expression = expression.replaceAll("\\babs\\(", "Math.abs(");
+            // Handle cbrt: cbrt(x) becomes (x<0 ? -Math.pow(-x,1/3) : Math.pow(x,1/3))
+            expression = expression.replaceAll("cbrt\\(([^)]*)\\)", "($1<0?-Math.pow(-($1),1/3):Math.pow($1,1/3))");
         
             // Add implicit multiplication: 2x becomes 2*x
             expression = expression.replaceAll("(\\d)([a-zA-Z])", "$1*$2");
@@ -71,7 +73,9 @@ public class Function {
             expression = expression.replaceAll("\\b([a-zA-Z])\\(", "$1*(");
         
             // Convert mathematical notation to JavaScript:
-            // x^2 becomes Math.pow(x, 2) (Nashorn doesn't support ** operator)
+            // Handle fractional exponents with negative bases: x^(1/5) becomes (x<0?-Math.pow(-x,1/5):Math.pow(x,1/5))
+            expression = expression.replaceAll("([a-zA-Z0-9)]+)\\^\\(([^)]*\\d+/\\d+[^)]*)\\)", "($1<0?-Math.pow(-($1),($2)):Math.pow($1,($2)))");
+            // Then handle remaining powers: x^2 becomes Math.pow(x, 2) (Nashorn doesn't support ** operator)
             expression = expression.replaceAll("([a-zA-Z0-9)]+)\\^([a-zA-Z0-9(]+)", "Math.pow($1,$2)");
         
             //System.out.println("Converted to: " + expression);

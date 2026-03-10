@@ -43,7 +43,6 @@ public class InputField
         return coord;
     }
 
-    //on enter call
     public void setValue(String str)
     {
         value.setLength(0);
@@ -78,11 +77,11 @@ public class InputField
         return (mouseX >= coord[0] && mouseX <= coord[0]+width) && (mouseY >= coord[1] && mouseY <= coord[1]+height);
     }
 
-    public void handleKeyInput(KeyPressEvent keyEvent)
+    public boolean handleKeyInput(KeyPressEvent keyEvent)
     {
         if (!isActive)
         {
-            return;
+            return false;
         }
 
         char firstChar = keyEvent.getKey().toString().charAt(0);
@@ -124,6 +123,10 @@ public class InputField
         {
             value.append('/');
         }
+        else if (key == Key.PERIOD)
+        {
+            value.append('.');
+        }
 
         // numbers are N_
         else if (firstChar == 'N')
@@ -147,8 +150,10 @@ public class InputField
         //enter
         else if (key == Key.ENTER)
         {
-            //deactivate carat, update the equation
-            //everytime carat is deactivated-- update the equation
+            isActive = false;
+            return true;
         }
+
+        return false;
     }
 }

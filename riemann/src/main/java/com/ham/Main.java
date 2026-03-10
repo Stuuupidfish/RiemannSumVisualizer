@@ -28,11 +28,15 @@ public class Main {
         cd.setTitle("Riemann Sum Visualizer");
 
 
-        String expression = "sin(x)";//"sin(20x)*sin(x)";
+        String expression = "x^(1/5)";//"sin(20x)*sin(x)";
         Function f = new Function(expression);
-        double a;
-        double b;
-        int n;
+        double a = -10;
+        double b = 10;
+        int n = 50;
+        UI.setA(a+"");
+        UI.setB(b+"");
+        UI.setN(n+"");
+        UI.setExpression(expression);
 
         InputField nInput = new InputField(95, 160, 100, 25, cd);
         InputField aInput = new InputField(95, 190, 100, 25, cd);
@@ -119,7 +123,34 @@ public class Main {
                     KeyPressEvent keyEvent = scanner.nextKeyPressEvent();
                     if (activeInput != null)
                     {
-                        activeInput.handleKeyInput(keyEvent);
+                        boolean submitted = activeInput.handleKeyInput(keyEvent);
+                        if (submitted)
+                        {
+                            if (activeInput == aInput)
+                            {
+                                a = Double.parseDouble(aInput.getValue());
+                                UI.setA(a + "");
+                            }
+                            else if (activeInput == bInput)
+                            {
+                                b = Double.parseDouble(bInput.getValue());
+                                UI.setB(b + "");
+                            }
+                            else if (activeInput == nInput)
+                            {
+                                n = Integer.parseInt(nInput.getValue());
+                                UI.setN(n + "");
+                            }
+                            else if (activeInput == yInput)
+                            {
+                                expression = yInput.getValue();
+                                f = new Function(expression);
+                                UI.setExpression(expression);
+                            }
+
+                            caretActive = false;
+                            activeInput = null;
+                        }
                     }
                 }
                 else 
@@ -130,7 +161,7 @@ public class Main {
 
             drawGrid(cd);
             //drawAll(CodeDraw cd, String expression, double a, double b, int n, Function f, UIHandler UI, String approxType)
-            drawAll(cd, expression, 0, 10, 50, f, UI, "left");
+            drawAll(cd, expression, a, b, n, f, UI, "mid");
 
             nInput.drawBox();
             aInput.drawBox();
@@ -148,6 +179,10 @@ public class Main {
                 //double [] coord = activeInput.getCoord();
                 activeInput.drawText(activeInput.getValue()+"|");
             }
+            else
+            {
+                
+            }
 
             cd.show();
         }
@@ -155,9 +190,10 @@ public class Main {
 
     public static void drawAll(CodeDraw cd, String expression, double a, double b, int n, Function f, UIHandler UI, String approxType)
     {
-        UI.drawEquation(a + "", b + "", n + "", expression);
+        //UI.drawEquation(a + "", b + "", n + "", expression);
         drawRS(approxType, a, b, n, f, cd);
         drawFunction(f, cd);
+        UI.drawEquation();
     }
 
     public static void drawGrid(CodeDraw cd)
@@ -190,22 +226,31 @@ public class Main {
     {
         double[] prevPoint = new double[2];
         double[] curPoint = new double[2];
+        boolean validPrev = false;
         cd.setColor(Palette.GREEN);
         for (int i = -WIDTH/2; i < WIDTH/2; i++)
         {
             double x = i / SCALE;  //convert screen coordinate to math coordinate
             double y = f.getY(x);
             
+            //skip invalid values
+            if (Double.isNaN(y) || Double.isInfinite(y)) 
+            {
+                validPrev = false;
+                continue;
+            }
+            
             prevPoint = curPoint;
             curPoint = new double[2];
             curPoint[0] = i + X_OFFSET;
             curPoint[1] = -(y * SCALE) + Y_OFFSET;
             
-            // public void drawLine(double startX, double startY, double endX, double endY)
-            if (i != -WIDTH/2)
+            //draws line only if theres valid previous point
+            if (validPrev)
             {
                 cd.drawLine(prevPoint[0], prevPoint[1], curPoint[0], curPoint[1]);
             }
+            validPrev = true;
                  
             cd.drawPoint(i + X_OFFSET, -(y * SCALE) + Y_OFFSET);  //convert back to screen coordinates
         }

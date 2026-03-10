@@ -7,14 +7,48 @@ import codedraw.Palette;
 public class UIHandler {
     private CodeDraw cd;
     private TextFormat tf;
+    private String a;
+    private String b;
+    private String n;
+    private String expression;
 
-    public UIHandler (CodeDraw cd)
+    public UIHandler(CodeDraw cd)
     {
         this.cd = cd;
         this.tf = cd.getTextFormat();
+        a = null;
+        b = null;
+        n = null;
+        expression = null;
+    }
+    public UIHandler(CodeDraw cd, String a, String b, String n, String expression)
+    {
+        this.cd = cd;
+        this.tf = cd.getTextFormat();
+        this.a = a;
+        this.b = b;
+        this.n = n;
+        this.expression = expression;
     }
 
-    public void drawEquation(String a, String b, String n, String expression)
+    public void setA(String a)
+    {
+        this.a = a;
+    }
+    public void setB(String b)
+    {
+        this.b = b;
+    }
+    public void setN(String n)
+    {
+        this.n = n;
+    }
+    public void setExpression(String expression)
+    {
+        this.expression = expression;
+    }
+
+    public void drawEquation()
     {
         tf.setFontName(Font.MONOSPACED);
         tf.setBold(true);
