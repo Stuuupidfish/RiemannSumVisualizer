@@ -13,6 +13,9 @@ import codedraw.Palette;
 
 // (cd to riemann)
 // mvn compile exec:java "-Dexec.mainClass=com.ham.Main"
+
+//!!!!!!!!!I STILL NEED TO BUILD BUTTONS FOR APPROXTYPE
+
 public class Main {
     private static final int WIDTH = 800;
     private static final int HEIGHT = 600;
@@ -24,28 +27,30 @@ public class Main {
         CodeDraw cd = new CodeDraw(WIDTH, HEIGHT);
         EventScanner scanner = cd.getEventScanner();
         UIHandler UI = new UIHandler(cd);
-
         cd.setTitle("Riemann Sum Visualizer");
 
+        //ALL O FTHESE CAN BE BUNDLED INTO RUNTIMESTATE
+                String expression = "x^(1/5)";//"sin(20x)*sin(x)";
+                Function f = new Function(expression);
+                double a = -10;
+                double b = 10;
+                int n = 50;
 
-        String expression = "x^(1/5)";//"sin(20x)*sin(x)";
-        Function f = new Function(expression);
-        double a = -10;
-        double b = 10;
-        int n = 50;
+                InputField nInput = new InputField(95, 160, 100, 25, cd);
+                InputField aInput = new InputField(95, 190, 100, 25, cd);
+                InputField bInput = new InputField(95, 220, 100, 25, cd);
+                InputField yInput = new InputField(95, 250, 150, 25, cd);
+
+                boolean caretActive = false;
+                InputField activeInput = null;
+        
+        //only instantiated nothing done w it yet
+        RuntimeState state = new RuntimeState(n, a, b, expression, "mid");
+
         UI.setA(a+"");
         UI.setB(b+"");
         UI.setN(n+"");
         UI.setExpression(expression);
-
-        InputField nInput = new InputField(95, 160, 100, 25, cd);
-        InputField aInput = new InputField(95, 190, 100, 25, cd);
-        InputField bInput = new InputField(95, 220, 100, 25, cd);
-        InputField yInput = new InputField(95, 250, 150, 25, cd);
-
-        boolean caretActive = false;
-
-        InputField activeInput = null;
 
         while (!cd.isClosed())
         {
@@ -126,6 +131,10 @@ public class Main {
                         boolean submitted = activeInput.handleKeyInput(keyEvent);
                         if (submitted)
                         {
+                            //!!!!!!!!!!!!!!!!!!!CHANGE NEEDED:
+                            //INSTEAD OF UPDATING ONE PORTION AT A TIME IT SHOULD UPDATE THEM ALL
+                            //OTHERWISE EVERY CARET SWITCH SHOULD UPDATE IT
+                            //I GOTTA CHOOSE ONE
                             if (activeInput == aInput)
                             {
                                 a = Double.parseDouble(aInput.getValue());
@@ -161,17 +170,18 @@ public class Main {
 
             drawGrid(cd);
             //drawAll(CodeDraw cd, String expression, double a, double b, int n, Function f, UIHandler UI, String approxType)
-            drawAll(cd, expression, a, b, n, f, UI, "mid");
+            drawAll(cd, a, b, n, f, UI, "mid");
 
-            nInput.drawBox();
-            aInput.drawBox();
-            bInput.drawBox();
-            yInput.drawBox();
+            //THESE SHOULD BE BUNDLED IN SOME METHOD
+                nInput.drawBox();
+                aInput.drawBox();
+                bInput.drawBox();
+                yInput.drawBox();
 
-            nInput.drawText(nInput.getValue());
-            aInput.drawText(aInput.getValue());
-            bInput.drawText(bInput.getValue());
-            yInput.drawText(yInput.getValue());
+                nInput.drawText(nInput.getValue());
+                aInput.drawText(aInput.getValue());
+                bInput.drawText(bInput.getValue());
+                yInput.drawText(yInput.getValue());
 
             if (caretActive && activeInput != null)
             {
@@ -179,18 +189,13 @@ public class Main {
                 //double [] coord = activeInput.getCoord();
                 activeInput.drawText(activeInput.getValue()+"|");
             }
-            else
-            {
-                
-            }
 
             cd.show();
         }
     }
 
-    public static void drawAll(CodeDraw cd, String expression, double a, double b, int n, Function f, UIHandler UI, String approxType)
+    public static void drawAll(CodeDraw cd, double a, double b, int n, Function f, UIHandler UI, String approxType)
     {
-        //UI.drawEquation(a + "", b + "", n + "", expression);
         drawRS(approxType, a, b, n, f, cd);
         drawFunction(f, cd);
         UI.drawEquation();
