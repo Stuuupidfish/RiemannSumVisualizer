@@ -35,8 +35,6 @@ public class RuntimeState {
     }
 
     //getters and setters 
-    //do I need to set function? y depends on expression
-    //IM SKIPPING IT FO RNOW
     public void setExpression(String expression)
     {
         this.expression = expression;

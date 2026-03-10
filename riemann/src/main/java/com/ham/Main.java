@@ -14,7 +14,7 @@ import codedraw.Palette;
 // (cd to riemann)
 // mvn compile exec:java "-Dexec.mainClass=com.ham.Main"
 
-//!!!!!!!!!I STILL NEED TO BUILD BUTTONS FOR APPROXTYPE-- DO THIS LAST??:
+//!!!!!!!!!I STILL NEED TO BUILD BUTTONS FOR APPROXTYPE
 // maybe like a scroll type w l and r arrows: [<] ["mid"] [>]
 // button class? left button, right button, text and rectangle for the middle (just a main cd.draw?), 
 // should i make a separate approx class or make the array part of runtime state?
@@ -34,24 +34,13 @@ public class Main {
         UIHandler UI = new UIHandler(cd);
         cd.setTitle("Riemann Sum Visualizer");
 
-        //ALL O FTHESE CAN BE BUNDLED INTO RUNTIMESTATE
-        // String expression = "x^(1/5)";//"sin(20x)*sin(x)";
-        // Function f = new Function(expression); // function now in runtimestate
-        // double a = -10;
-        // double b = 10;
-        // int n = 50;
         InputField nInput = new InputField(95, 160, 100, 25, cd);
         InputField aInput = new InputField(95, 190, 100, 25, cd);
         InputField bInput = new InputField(95, 220, 100, 25, cd);
         InputField yInput = new InputField(95, 250, 150, 25, cd);
-        // boolean caretActive = false; ---handled in runtimestate now
-        // InputField activeInput = null; ---handled in runtimestate now
+        
         RuntimeState state = new RuntimeState(0, 0, 0, "", "mid", nInput, aInput, bInput, yInput);
 
-        // UI.setA(a+"");
-        // UI.setB(b+"");
-        // UI.setN(n+"");
-        // UI.setExpression(expression);
         UI.setA(state.getA()+"");
         UI.setB(state.getB()+"");
         UI.setN(state.getN()+"");
@@ -63,15 +52,13 @@ public class Main {
             {
                 if (scanner.hasMouseClickEvent())
                 {
-                    System.out.println("mouse clicked");
-                    
                     // https://krassnig.github.io/CodeDrawJavaDoc/v5.0.x/codedraw/EventScanner.html#hasMouseDownEvent()
                     MouseClickEvent mouse = scanner.nextMouseClickEvent();
 
                     double mouseX = mouse.getX();
                     double mouseY = mouse.getY();
-
-                    // Commit when focus leaves the currently active input.
+                    
+                    //commits changes when user clicks off an input field
                     InputField currentActive = state.getActiveInput();
                     if (currentActive != null && !currentActive.contains(mouseX, mouseY))
                     {
@@ -80,77 +67,33 @@ public class Main {
                     
                     if (nInput.contains(mouseX, mouseY))
                     {
-                        System.out.println("n");
-
                         state.setInputsActive(true, false, false, false);
                         state.setActiveInput(nInput);
                         state.setCaretActive(true);
-
-                        // caretActive = true;
-                        // activeInput = nInput;
-                        // nInput.setActive(true);
-                        // aInput.setActive(false);
-                        // bInput.setActive(false);
-                        // yInput.setActive(false);
                     }
                     else if (aInput.contains(mouseX, mouseY))
                     {
-                        System.out.println("a");
-
                         state.setInputsActive(false, true, false, false);
                         state.setActiveInput(aInput);
                         state.setCaretActive(true);
-
-                        // caretActive = true;
-                        // activeInput = aInput;
-                        // aInput.setActive(true);
-                        // nInput.setActive(false);
-                        // bInput.setActive(false);
-                        // yInput.setActive(false);
                     }
                     else if (bInput.contains(mouseX, mouseY))
                     {
-                        System.out.println("b");
-
                         state.setInputsActive(false, false, true, false);
                         state.setActiveInput(bInput);
                         state.setCaretActive(true);
-
-                        // caretActive = true;
-                        // activeInput = bInput;
-                        // bInput.setActive(true);
-                        // aInput.setActive(false);
-                        // nInput.setActive(false);
-                        // yInput.setActive(false);
                     }
                     else if (yInput.contains(mouseX, mouseY))
                     {
-                        System.out.println("y");
-
                         state.setInputsActive(false, false, false, true);
                         state.setActiveInput(yInput);
                         state.setCaretActive(true);
-
-                        // caretActive = true;
-                        // activeInput = yInput;
-                        // yInput.setActive(true);
-                        // aInput.setActive(false);
-                        // nInput.setActive(false);
-                        // bInput.setActive(false);
-                        
                     }
                     else
                     {
                         state.setActiveInput(null);
                         state.setCaretActive(false);
                         state.setInputsActive(false, false, false, false);
-
-                        // caretActive = false;
-                        // activeInput = null;
-                        // aInput.setActive(false);
-                        // nInput.setActive(false);
-                        // bInput.setActive(false);
-                        // yInput.setActive(false);
                     }
                 }
                 if (scanner.hasKeyPressEvent())
@@ -166,42 +109,6 @@ public class Main {
                             state.commitActiveInput(UI);
                         }
                     }
-
-                    // if (activeInput != null)
-                    // {
-                    //     boolean submitted = activeInput.handleKeyInput(keyEvent);
-                    //     if (submitted)
-                    //     {
-                    //         //!!!!!!!!!!!!!!!!!!!CHANGE NEEDED:
-                    //         //INSTEAD OF UPDATING ONE PORTION AT A TIME IT SHOULD UPDATE THEM ALL
-                    //         //OTHERWISE EVERY CARET SWITCH SHOULD UPDATE IT
-                    //         //I GOTTA CHOOSE ONE
-                    //         if (activeInput == aInput)
-                    //         {
-                    //             a = Double.parseDouble(aInput.getValue());
-                    //             UI.setA(a + "");
-                    //         }
-                    //         else if (activeInput == bInput)
-                    //         {
-                    //             b = Double.parseDouble(bInput.getValue());
-                    //             UI.setB(b + "");
-                    //         }
-                    //         else if (activeInput == nInput)
-                    //         {
-                    //             n = Integer.parseInt(nInput.getValue());
-                    //             UI.setN(n + "");
-                    //         }
-                    //         else if (activeInput == yInput)
-                    //         {
-                    //             expression = yInput.getValue();
-                    //             f = new Function(expression);
-                    //             UI.setExpression(expression);
-                    //         }
-
-                    //         caretActive = false;
-                    //         activeInput = null;
-                    //     }
-                    // }
                 }
                 else 
                 {
@@ -210,24 +117,10 @@ public class Main {
             }
 
             drawGrid(cd);
-            //drawAll(CodeDraw cd, String expression, double a, double b, int n, Function f, UIHandler UI, String approxType)
-            //drawAll(cd, state.getA(), state.getB(), state.getN(), state.getFunction(), UI, state.getApproxType());
             drawAll(cd, state, UI);
-            
-            // nInput.drawBox();
-            // aInput.drawBox();
-            // bInput.drawBox();
-            // yInput.drawBox();
 
-            // nInput.drawText(nInput.getValue());
-            // aInput.drawText(aInput.getValue());
-            // bInput.drawText(bInput.getValue());
-            // yInput.drawText(yInput.getValue());
-
-            //refactored
             if (state.getCaretActive() && state.getActiveInput() != null)
             {
-                System.out.println("caret active");
                 InputField activeInput = state.getActiveInput();
                 activeInput.drawText(activeInput.getValue()+"|");
             }
@@ -235,13 +128,6 @@ public class Main {
             cd.show();
         }
     }
-
-    // public static void drawAll(CodeDraw cd, double a, double b, int n, Function f, UIHandler UI, String approxType)
-    // {
-    //     drawRS(approxType, a, b, n, f, cd);
-    //     drawFunction(f, cd);
-    //     UI.drawEquation();
-    // }
 
     public static void drawAll(CodeDraw cd, RuntimeState state, UIHandler UI)
     {
@@ -338,8 +224,6 @@ public class Main {
         }
     }
 
-    //fillRectangle(double x, double y, double width, double height)
-    //drawRectangle(double x, double y, double width, double height)
     public static void drawRS(String approxType, double a, double b, int n, Function f, CodeDraw cd)
     {
         if (n <= 0)
