@@ -15,6 +15,8 @@ public class RuntimeState {
     private InputField bInput;
     private InputField yInput;
 
+    private double sum;
+
     public RuntimeState(int n, double a, double b, String expression, String approxType
                         , InputField nInput, InputField aInput, InputField bInput, InputField yInput)
     {
@@ -32,9 +34,21 @@ public class RuntimeState {
         this.aInput = aInput;
         this.bInput = bInput;
         this.yInput = yInput;
+
+        this.sum = 0;
     }
 
     //getters and setters 
+
+    public double getSum()
+    {
+        return sum;
+    }
+    public void setSum(double sum)
+    {
+        this.sum = sum;
+    }
+
     public void setExpression(String expression)
     {
         this.expression = expression;

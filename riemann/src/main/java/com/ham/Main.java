@@ -134,13 +134,15 @@ public class Main {
         if (state.getExpression() == null || state.getExpression().trim().isEmpty())
         {
             drawInputFields(state);
+            UI.setSum(null);
             UI.drawEquation();
             apprx.draw();
             return;
         }
         if (state.getN() > 0)
         {
-            drawRS(state.getApproxType(), state.getA(), state.getB(), state.getN(), state.getFunction(), cd);
+            drawRS(cd, state);
+            UI.setSum(state.getSum() + "");  //update sum in UI
         }
         drawFunction(state.getFunction(), cd);
         drawInputFields(state);
@@ -225,14 +227,23 @@ public class Main {
         }
     }
 
-    public static void drawRS(String approxType, double a, double b, int n, Function f, CodeDraw cd)
+    public static void drawRS(CodeDraw cd, RuntimeState state)
     {
+        double a = state.getA();
+        double b = state.getB();
+        int n = state.getN();
+        Function f = state.getFunction();
+        String approxType = state.getApproxType();
+
         if (n <= 0)
         {
+            state.setSum(0.0);
             return;
         }
 
+        double sum = 0;
         double dx = (b-a)/n;
+
         if (approxType.equals("right"))
         {
             for (int i = 1; i <= n; i++)
@@ -258,6 +269,8 @@ public class Main {
                 cd.fillRectangle(xScreen - (dx * SCALE), yScreen, dx * SCALE, heightScreen);
                 cd.setColor(Palette.GREEN);
                 cd.drawRectangle(xScreen - (dx * SCALE), yScreen, dx * SCALE, heightScreen);
+
+                sum += y * dx;
             }
         }
         else if (approxType.equals("left"))
@@ -285,6 +298,8 @@ public class Main {
                 cd.fillRectangle(xScreen, yScreen, dx * SCALE, heightScreen);
                 cd.setColor(Palette.GREEN);
                 cd.drawRectangle(xScreen, yScreen, dx * SCALE, heightScreen);
+
+                sum += y * dx;
             }
         }
         else if (approxType.equals("mid"))
@@ -312,8 +327,13 @@ public class Main {
                 cd.fillRectangle(xScreen - (dx * SCALE/2), yScreen, dx * SCALE, heightScreen);
                 cd.setColor(Palette.GREEN);
                 cd.drawRectangle(xScreen - (dx * SCALE/2), yScreen, dx * SCALE, heightScreen);
+
+                sum += y * dx;
             }
         }
+
+        state.setSum(sum);
     }
+
 
 }

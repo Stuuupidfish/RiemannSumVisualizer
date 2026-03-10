@@ -11,6 +11,7 @@ public class UIHandler {
     private String b;
     private String n;
     private String expression;
+    private String sum;
 
     public UIHandler(CodeDraw cd)
     {
@@ -20,6 +21,7 @@ public class UIHandler {
         b = null;
         n = null;
         expression = null;
+        sum = null;
     }
     public UIHandler(CodeDraw cd, String a, String b, String n, String expression)
     {
@@ -29,8 +31,15 @@ public class UIHandler {
         this.b = b;
         this.n = n;
         this.expression = expression;
+
+        sum = null;
     }
 
+
+    public void setSum(String sum)
+    {
+        this.sum = sum;
+    }
     public void setA(String a)
     {
         this.a = a;
@@ -106,6 +115,12 @@ public class UIHandler {
         {
             str += "Δx";
         }
+
+        if (sum != null && sum.length() > 0)
+        {
+            str += " ≈ " + sum;
+        }
+
         cd.drawText(135, 70, str);
 
         tf.setFontSize(20);
