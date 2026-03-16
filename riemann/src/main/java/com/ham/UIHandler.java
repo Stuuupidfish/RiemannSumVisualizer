@@ -12,6 +12,7 @@ public class UIHandler {
     private String n;
     private String expression;
     private String sum;
+    private String approxType;
 
     public UIHandler(CodeDraw cd)
     {
@@ -22,6 +23,7 @@ public class UIHandler {
         n = null;
         expression = null;
         sum = null;
+        approxType = "mid";
     }
     public UIHandler(CodeDraw cd, String a, String b, String n, String expression)
     {
@@ -33,6 +35,7 @@ public class UIHandler {
         this.expression = expression;
 
         sum = null;
+        approxType = "mid";
     }
 
 
@@ -56,6 +59,10 @@ public class UIHandler {
     {
         this.expression = expression;
     }
+    public void setApproxType(String approxType)
+    {
+        this.approxType = approxType;
+    }
 
     public void drawEquation()
     {
@@ -71,23 +78,16 @@ public class UIHandler {
         cd.drawText(60, 40, "Σ");
 
         tf.setFontSize(20);
-        if (b != null && b.length() > 0)
+        if (n != null && n.length() > 0 && !n.equals("0"))
         {
-            cd.drawText(70, 25, b);
+            cd.drawText(70, 25, n);
         }
         else
         {
-            cd.drawText(70, 25, "b");
+            cd.drawText(80, 25, "n");
         }
         
-        if (a != null && a.length() > 0)
-        {
-            cd.drawText(50, 125, "a = " + a);
-        }
-        else
-        {
-            cd.drawText(50, 125, "a =");
-        }
+        cd.drawText(55, 125, "i = 1");
         tf.setFontSize(32);
 
         String str = "";
@@ -97,7 +97,7 @@ public class UIHandler {
         }
         else
         {
-            str = "f(x) ";
+            str = "f(x)";
         }
 
         if (b != null && b.length() > 0 && a != null && a.length() > 0 && n != null && n.length() > 0)
@@ -118,10 +118,13 @@ public class UIHandler {
 
         if (sum != null && sum.length() > 0)
         {
-            str += " ≈ " + sum;
+            str += "≈" + sum;
         }
 
         cd.drawText(135, 70, str);
+
+        tf.setFontSize(18);
+        cd.drawText(135, 110, getSamplePointText());
 
         tf.setFontSize(20);
         cd.drawText(40, 160, "n = ");
@@ -131,6 +134,24 @@ public class UIHandler {
         cd.drawText(40, 220, "b = ");
 
         cd.drawText(12, 250, "f(x) = ");
+    }
+
+    private String getSamplePointText()
+    {
+        if (approxType == null || approxType.length() == 0)
+        {
+            return "x = a + (i-1/2)Δx";
+        }
+
+        if (approxType.equals("left"))
+        {
+            return "x = a + (i-1)Δx";
+        }
+        if (approxType.equals("right"))
+        {
+            return "x = a + iΔx";
+        }
+        return "x = a + (i-1/2)Δx";
     }
 
 }

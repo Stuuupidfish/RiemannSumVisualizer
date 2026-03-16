@@ -38,6 +38,7 @@ public class Main {
         UI.setB(state.getB()+"");
         UI.setN(state.getN()+"");
         UI.setExpression(state.getExpression());
+        UI.setApproxType(state.getApproxType());
 
         while (!cd.isClosed())
         {
@@ -55,6 +56,7 @@ public class Main {
                     if (newApproxType != null)
                     {
                         state.setApproxType(newApproxType);
+                        UI.setApproxType(newApproxType);
                     }
                     
                     //commits changes when user clicks off an input field
@@ -130,6 +132,8 @@ public class Main {
 
     public static void drawAll(CodeDraw cd, RuntimeState state, UIHandler UI, ApproxSelector apprx)
     {
+        UI.setApproxType(state.getApproxType());
+
         //doesnt draw function if expression is empty
         if (state.getExpression() == null || state.getExpression().trim().isEmpty())
         {
@@ -191,6 +195,8 @@ public class Main {
         cd.setColor(Palette.BLACK);
         cd.drawLine(-WIDTH/2 + X_OFFSET, 0 + Y_OFFSET, WIDTH/2 + X_OFFSET, 0 + Y_OFFSET);
         cd.drawLine(0 + X_OFFSET, -HEIGHT/2 + Y_OFFSET, 0 + X_OFFSET, HEIGHT/2 + Y_OFFSET);
+        cd.drawText(X_OFFSET + WIDTH/2 - 20, Y_OFFSET + 10, "x");
+        cd.drawText(X_OFFSET + 10, Y_OFFSET - HEIGHT/2 + 10, "y");
     }
 
     public static void drawFunction(Function f, CodeDraw cd)
