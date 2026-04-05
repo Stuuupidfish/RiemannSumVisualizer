@@ -19,7 +19,7 @@ Ok like the project name says, this is a Riemann sum visualizer. It will graph a
 - press enter or click off an input field to apply changes
 - hit the left and right buttons to switch between approximation modes
 
-## Tech stack:
+### Tech stack:
 - Java 
 - Maven 
 - [CodeDraw](https://github.com/Krassnig/CodeDraw)
