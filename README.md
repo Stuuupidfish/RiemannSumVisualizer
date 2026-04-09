@@ -1,6 +1,8 @@
 ## Riemann Sum Visualizer
 Ok like the project name says, this is a Riemann sum visualizer. It will graph a user-defined function and draw a left/mid/right approximation and give you the approximate sum of the summation.  
 
+<img width="598" height="432" alt="Screenshot 2026-04-09 164139" src="https://github.com/user-attachments/assets/ee449fb4-996f-403e-9bcf-98d73097cd57" />
+
 ### Features:
 - function input (cos(x), x^(1/2), cbrt(x), x^5, etc...)
 - adjustable interval (a to b)
